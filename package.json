@@ -8,15 +8,18 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "ioredis": "5.3.2",
     "next": "14.1.0",
     "react": "18.3.0-canary-03d6f7cf0-20240209",
-    "react-dom": "18.3.0-canary-03d6f7cf0-20240209"
+    "react-dom": "18.3.0-canary-03d6f7cf0-20240209",
+    "uuid": "9.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.3",
     "@types/node": "20.10.6",
     "@types/react": "18.2.46",
     "@types/react-dom": "18.2.18",
+    "@types/uuid": "9.0.8",
     "husky": "9.0.11",
     "typescript": "5.3.3"
   }
