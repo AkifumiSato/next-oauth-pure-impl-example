@@ -10,6 +10,17 @@ type GithubAccessTokenResponse = {
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
+  const session = await getSession();
+  if (session.currentUser.isLogin === true) {
+    throw new Error("Already login.");
+  }
+
+  // check state(csrf token)
+  const urlState = searchParams.get("state");
+  if (session.currentUser.state !== urlState) {
+    throw new Error("CSRF token not equaled.");
+  }
+
   const code = searchParams.get("code");
   const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = process.env;
   if (GITHUB_CLIENT_ID === undefined || GITHUB_CLIENT_SECRET === undefined) {
@@ -29,7 +40,6 @@ export async function GET(request: NextRequest) {
     return res.json();
   });
 
-  const session = await getSession();
   await session.onLogin(githubTokenResponse.access_token);
 
   redirect("/user", RedirectType.replace);

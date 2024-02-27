@@ -31,6 +31,14 @@ class Session {
     return this.values.currentUser;
   }
 
+  async preLogin() {
+    const state = uuid();
+    this.values.currentUser = { isLogin: false, state };
+    await this.save();
+
+    return state;
+  }
+
   async onLogin(accessToken: string) {
     this.values.currentUser = { isLogin: true, accessToken };
     await this.save();

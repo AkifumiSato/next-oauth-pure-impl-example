@@ -4,7 +4,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "check": "biome check . --apply",
+    "clean-start": "rm -rf .next && next build && next start",
+    "check": "biome check .",
     "prepare": "husky"
   },
   "dependencies": {
