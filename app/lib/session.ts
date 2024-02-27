@@ -16,7 +16,7 @@ type PersistedSession = {
       }
     | {
         isLogin: true;
-        token: string;
+        accessToken: string;
       };
 };
 
@@ -31,8 +31,8 @@ class Session {
     return this.values.currentUser;
   }
 
-  async onLogin(token: string) {
-    this.values.currentUser = { isLogin: true, token };
+  async onLogin(accessToken: string) {
+    this.values.currentUser = { isLogin: true, accessToken };
     await this.save();
   }
 
