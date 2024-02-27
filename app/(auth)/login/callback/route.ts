@@ -18,7 +18,8 @@ export async function GET(request: NextRequest) {
   // check state(csrf token)
   const urlState = searchParams.get("state");
   if (session.currentUser.state !== urlState) {
-    throw new Error("CSRF token not equaled.");
+    console.error("CSRF Token", session.currentUser.state, urlState);
+    throw new Error("CSRF Token not equaled.");
   }
 
   const code = searchParams.get("code");
