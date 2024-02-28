@@ -1,34 +1,12 @@
-import Link from "next/link";
 import { getSession } from "../../lib/session";
-import { LogoutButton } from "../logout-button";
+import { GithubUser, NotLogin } from "./presentational";
 
 // Partial type
-type GithubUserResponse = {
+export type GithubUserResponse = {
   id: number;
   name: string;
   email: string;
 };
-
-export function NotLogin() {
-  return (
-    <>
-      <h1>Please Login</h1>
-      <Link href="/">top page</Link>
-    </>
-  );
-}
-
-export function GithubUser({ githubUser }: { githubUser: GithubUserResponse }) {
-  return (
-    <>
-      <h1>Github user api response</h1>
-      <LogoutButton>logout</LogoutButton>
-      <pre>
-        <code>{JSON.stringify(githubUser, null, 2)}</code>
-      </pre>
-    </>
-  );
-}
 
 export default async function Page() {
   const session = await getSession();

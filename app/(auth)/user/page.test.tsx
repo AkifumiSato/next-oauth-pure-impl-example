@@ -3,7 +3,8 @@ import { mockCookies } from "../../lib/test-utils/next";
 import { getRedisInstance } from "../../lib/test-utils/session";
 import { server } from "../../mocks";
 import { githubApiHandlers } from "../mocks";
-import Page, { GithubUser, NotLogin } from "./page";
+import Page from "./page";
+import { GithubUser, NotLogin } from "./presentational";
 
 const { getCookiesMock } = mockCookies();
 
