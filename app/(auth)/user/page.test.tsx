@@ -1,12 +1,15 @@
-import { describe, expect, test } from "vitest";
-import { mockCookies } from "../../lib/test-utils/next";
+import { cookies } from "next/headers";
+import { Mock, describe, expect, test, vi } from "vitest";
 import { getRedisInstance } from "../../lib/test-utils/session";
 import { server } from "../../mocks";
 import { githubApiHandlers } from "../mocks";
 import Page from "./page";
 import { GithubUser, NotLogin } from "./presentational";
 
-const { getCookiesMock } = mockCookies();
+const cookiesMock = cookies() as unknown as {
+  get: Mock;
+  set: Mock;
+};
 
 function prepareSession({ isLogin }: { isLogin: boolean }) {
   const redis = getRedisInstance();
@@ -19,7 +22,7 @@ function prepareSession({ isLogin }: { isLogin: boolean }) {
 
   const DUMMY_SESSION_ID = "DUMMY_SESSION_ID";
   const DUMMY_ACCESS_TOKEN = "DUMMY_ACCESS_TOKEN";
-  getCookiesMock.mockReturnValue({ value: DUMMY_SESSION_ID });
+  cookiesMock.get.mockReturnValue({ value: DUMMY_SESSION_ID });
   redis.set(
     DUMMY_SESSION_ID,
     JSON.stringify({

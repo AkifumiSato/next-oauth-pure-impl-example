@@ -1,20 +1,22 @@
-import { RedirectType } from "next/navigation";
+import { cookies } from "next/headers";
+import { RedirectType, redirect } from "next/navigation";
 import { NextRequest } from "next/server";
-import { describe, expect, test } from "vitest";
-import { mockCookies, mockNavigation } from "../../../lib/test-utils/next";
+import { Mock, describe, expect, test } from "vitest";
 import { getRedisInstance } from "../../../lib/test-utils/session";
 import { server } from "../../../mocks";
 import { githubApiHandlers } from "../../mocks";
 import { GET } from "./route";
 
-const { redirectMock } = mockNavigation();
-const { getCookiesMock } = mockCookies();
+const cookiesMock = cookies() as unknown as {
+  get: Mock;
+  set: Mock;
+};
 
 function prepareSessionHasState() {
   const DUMMY_SESSION_ID = "DUMMY_SESSION_ID";
   const DUMMY_STATE = "DUMMY_STATE";
 
-  getCookiesMock.mockReturnValue({ value: DUMMY_SESSION_ID });
+  cookiesMock.get.mockReturnValue({ value: DUMMY_SESSION_ID });
   const redis = getRedisInstance();
   redis.set(
     DUMMY_SESSION_ID,
@@ -70,7 +72,7 @@ describe("GET", () => {
         accessToken: "DUMMY TOKEN",
       },
     });
-    expect(redirectMock).toBeCalledTimes(1);
-    expect(redirectMock).toBeCalledWith("/user", RedirectType.replace);
+    expect(redirect).toBeCalledTimes(1);
+    expect(redirect).toBeCalledWith("/user", RedirectType.replace);
   });
 });

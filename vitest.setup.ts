@@ -10,3 +10,21 @@ beforeAll(() =>
 );
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
+
+const cookiesMock = vi.hoisted(() => ({
+  get: vi.fn(),
+  set: vi.fn(),
+}));
+vi.mock("next/headers", () => ({
+  cookies() {
+    return cookiesMock;
+  },
+}));
+
+const redirectMock = vi.hoisted(() => vi.fn());
+vi.mock("next/navigation", async (importOriginal) => {
+  return {
+    ...(await importOriginal<typeof import("next/navigation")>()),
+    redirect: redirectMock,
+  };
+});
