@@ -9,15 +9,31 @@ type GithubUserResponse = {
   email: string;
 };
 
+export function NotLogin() {
+  return (
+    <>
+      <h1>Please Login</h1>
+      <Link href="/">top page</Link>
+    </>
+  );
+}
+
+export function GithubUser({ githubUser }: { githubUser: GithubUserResponse }) {
+  return (
+    <>
+      <h1>Github user api response</h1>
+      <LogoutButton>logout</LogoutButton>
+      <pre>
+        <code>{JSON.stringify(githubUser, null, 2)}</code>
+      </pre>
+    </>
+  );
+}
+
 export default async function Page() {
   const session = await getSession();
   if (!session.currentUser.isLogin) {
-    return (
-      <>
-        <h1>Please Login</h1>
-        <Link href="/">top page</Link>
-      </>
-    );
+    return <NotLogin />;
   }
 
   const githubUser: GithubUserResponse = await fetch(
@@ -36,15 +52,7 @@ export default async function Page() {
     return res.json();
   });
 
-  return (
-    <>
-      <h1>Github user api response</h1>
-      <LogoutButton>logout</LogoutButton>
-      <pre>
-        <code>{JSON.stringify(githubUser, null, 2)}</code>
-      </pre>
-    </>
-  );
+  return <GithubUser githubUser={githubUser} />;
 }
 
 export const metadata = {
