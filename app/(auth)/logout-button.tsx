@@ -1,11 +1,11 @@
 import { RedirectType, redirect } from "next/navigation";
-import { getSession } from "../lib/session";
+import { getMutableSession } from "../lib/session";
 
 export async function logout() {
   "use server";
 
-  const session = await getSession();
-  await session.onLogout();
+  const mutableSession = await getMutableSession();
+  await mutableSession.onLogout();
 
   redirect("/", RedirectType.replace);
 }

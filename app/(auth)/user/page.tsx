@@ -1,4 +1,4 @@
-import { getSession } from "../../lib/session";
+import { getReadonlySession } from "../../lib/session";
 import { GithubUser, NotLogin } from "./presentational";
 
 // Partial type
@@ -9,7 +9,7 @@ export type GithubUserResponse = {
 };
 
 export default async function Page() {
-  const session = await getSession();
+  const session = await getReadonlySession();
   if (!session.currentUser.isLogin) {
     return <NotLogin />;
   }

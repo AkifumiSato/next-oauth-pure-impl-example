@@ -1,6 +1,6 @@
 import { RedirectType, redirect } from "next/navigation";
 import { NextRequest } from "next/server";
-import { getSession } from "../../../lib/session";
+import { getMutableSession } from "../../../lib/session";
 
 type GithubAccessTokenResponse = {
   access_token: string;
@@ -10,15 +10,15 @@ type GithubAccessTokenResponse = {
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const session = await getSession();
-  if (session.currentUser.isLogin === true) {
+  const mutableSession = await getMutableSession();
+  if (mutableSession.currentUser.isLogin === true) {
     throw new Error("Already login.");
   }
 
   // check state(csrf token)
   const urlState = searchParams.get("state");
-  if (session.currentUser.state !== urlState) {
-    console.error("CSRF Token", session.currentUser.state, urlState);
+  if (mutableSession.currentUser.state !== urlState) {
+    console.error("CSRF Token", mutableSession.currentUser.state, urlState);
     throw new Error("CSRF Token not equaled.");
   }
 
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     return res.json();
   });
 
-  await session.onLogin(githubTokenResponse.access_token);
+  await mutableSession.onLogin(githubTokenResponse.access_token);
 
   redirect("/user", RedirectType.replace);
 }
