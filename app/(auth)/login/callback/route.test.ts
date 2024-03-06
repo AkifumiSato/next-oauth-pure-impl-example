@@ -36,6 +36,19 @@ function prepareSessionHasState() {
 }
 
 describe("GET", () => {
+  test("stateパラメータがセッションの値と不一致時にエラー", () => {
+    // Arrange
+    const { state } = prepareSessionHasState();
+    const DUMMY_STATE = `${state}__NO_NEED_PREFIX`;
+    const request = new NextRequest(
+      `http://localhost:3000/auth/github/callback?code=123&state=${DUMMY_STATE}`,
+    );
+    // Act
+    const responsePromise = GET(request);
+    // Assert
+    expect(responsePromise).rejects.toThrow("CSRF Token not equaled.");
+  });
+
   test("access_tokenの取得エラー", async () => {
     // Arrange
     const { state } = prepareSessionHasState();
