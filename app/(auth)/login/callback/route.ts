@@ -9,11 +9,13 @@ type GithubAccessTokenResponse = {
 };
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
   const mutableSession = await getMutableSession();
+  // type guardのために=== ture
   if (mutableSession.currentUser.isLogin === true) {
     throw new Error("Already login.");
   }
+
+  const searchParams = request.nextUrl.searchParams;
 
   // check state(csrf token)
   const urlState = searchParams.get("state");
@@ -22,12 +24,12 @@ export async function GET(request: NextRequest) {
     throw new Error("CSRF Token not equaled.");
   }
 
-  const code = searchParams.get("code");
   const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = process.env;
   if (GITHUB_CLIENT_ID === undefined || GITHUB_CLIENT_SECRET === undefined) {
     throw new Error("GITHUB_CLIENT_ID or GITHUB_CLIENT_SECRET is not defined");
   }
 
+  const code = searchParams.get("code");
   const githubTokenResponse: GithubAccessTokenResponse = await fetch(
     `https://github.com/login/oauth/access_token?client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_CLIENT_SECRET}&code=${code}`,
     {
